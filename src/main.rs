@@ -38,7 +38,7 @@ struct GeoPoint {
     lon: f32,
 }
 
-fn pxToPercipitation(px: &image::Rgba<u8>) -> f32 {
+fn px_to_percipitation(_px: image::Rgba<u8>) -> f32 {
     /**
      * RGBA:
      * (0, 0, 0)        :  0
@@ -78,16 +78,16 @@ fn pxToPercipitation(px: &image::Rgba<u8>) -> f32 {
      * (0, 98, 71)    54
      * (300, 100, 80) 57
      */
-
-    return 0.0;
+    0.0
 }
 
+impl GeoPoint {
+    fn new(lat: f32, lon: f32) -> GeoPoint {
+        GeoPoint { lat, lon }
+    }
+}
 
 impl WeatherMap {
-    fn new(lat: f32, lon: f32) -> GeoPoint {
-        return GeoPoint { lat: lat, lon: lon };
-    }
-    
     fn value(&self, point: GeoPoint) -> f32 {
         let x = ((point.lon - self.bbox.lon1) / (self.bbox.lon2 - self.bbox.lon1)
             * self.image.width() as f32)
@@ -96,7 +96,7 @@ impl WeatherMap {
             * self.image.height() as f32)
             .round() as u32;
         let px = *self.image.get_pixel(x, y);
-        return px[3] as f32 / 255.0;
+        px[3] as f32 / 255.0
     }
 }
 
@@ -105,7 +105,7 @@ impl WeatherMap {
 }*/
 
 fn to_image_url(rel_path: &str) -> String {
-    return format!("{}{}", "http://www.meteo.si", rel_path);
+    format!("{}{}", "http://www.meteo.si", rel_path)
 }
 
 fn download_image(url: &str) -> std::result::Result<image::RgbaImage, Box<dyn std::error::Error>> {
@@ -113,10 +113,10 @@ fn download_image(url: &str) -> std::result::Result<image::RgbaImage, Box<dyn st
     let mut buf: Vec<u8> = vec![];
     resp.copy_to(&mut buf)?;
 
-    return Ok(image::io::Reader::new(std::io::Cursor::new(buf))
+    Ok(image::io::Reader::new(std::io::Cursor::new(buf))
         .with_guessed_format()?
         .decode()?
-        .to_rgba());
+        .to_rgba())
 }
 
 fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
@@ -150,7 +150,7 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
 fn parse_datetime(
     dt: &str,
 ) -> std::result::Result<chrono::DateTime<chrono::FixedOffset>, chrono::ParseError> {
-    return chrono::DateTime::parse_from_rfc3339(dt);
+    chrono::DateTime::parse_from_rfc3339(dt)
 }
 
 fn parse_bbox(s: &str) -> std::result::Result<Bbox, std::num::ParseFloatError> {
@@ -159,12 +159,12 @@ fn parse_bbox(s: &str) -> std::result::Result<Bbox, std::num::ParseFloatError> {
     )
     .unwrap();
     let caps = re.captures(s).unwrap();
-    return Ok(Bbox {
+    Ok(Bbox {
         lat1: caps.name("lat1").unwrap().as_str().parse()?,
         lon1: caps.name("lon1").unwrap().as_str().parse()?,
         lat2: caps.name("lat2").unwrap().as_str().parse()?,
         lon2: caps.name("lon2").unwrap().as_str().parse()?,
-    });
+    })
 }
 
 #[cfg(test)]

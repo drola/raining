@@ -1,0 +1,31 @@
+/**
+ * https://colorpalettes.net/color-palette-4054/
+ */
+
+body, html {
+    background-color: #ecd5bb;
+    padding: 0;
+    margin: 0;
+    color: #702737;
+    font-family: sans-serif;
+}
+
+.wi {
+    font-size: 60vh;
+}
+
+.grid {
+    display: grid;
+    height: 100vh;
+    justify-items: center;
+    align-items: center;
+}
+
+.info {
+    text-align: center;
+    padding-top: 2em;
+}
+
+.info a {
+    color: #262662;
+}

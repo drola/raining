@@ -4,20 +4,10 @@ use serde::{Deserialize, Serialize};
 #[macro_use]
 extern crate log;
 mod px_to_precipitation;
+mod meteo_data;
 
 //use chrono::prelude::*;
 
-#[derive(Serialize, Deserialize, std::fmt::Debug)]
-struct RadarPercipitationResponseItem {
-    mode: String,
-    path: String,
-    date: String,
-    hhmm: String,
-    bbox: String,
-    width: String,
-    height: String,
-    valid: String,
-}
 
 #[derive(PartialEq, std::fmt::Debug)]
 struct Bbox {
@@ -98,7 +88,7 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     // - purge old data
 
     /*let resp: Vec<RadarPercipitationResponseItem> = reqwest::get(
-        "http://www.meteo.siuploads/probase/www/nowcast/inca/inca_si0zm_data.json?prod=si0zm",
+        "http://www.meteo.si/uploads/probase/www/nowcast/inca/inca_si0zm_data.json?prod=si0zm",
     )?
     .json()?;
     let maps: Vec<RadarPercipitationMap> = resp.iter().map(&to_radar_percipitation_map).collect();

@@ -85,10 +85,22 @@ struct TimestampedWeatherMap {
 }
 
 struct WeatherMap {
-    //  datetime: chrono::DateTime<chrono::FixedOffset>,
-    //  image_url: String,
     bbox: Bbox,
     image: image::RgbaImage,
+}
+
+impl WeatherMap {
+    fn get_pixel_at_coordinate(&self, lat: f32, lon: f32) -> std::option::Option<image::Rgba<u8>> {
+        let x =
+            (lon - self.bbox.lon1) / (self.bbox.lon2 - self.bbox.lon1) * self.image.width() as f32;
+        let y =
+            (lat - self.bbox.lat1) / (self.bbox.lat2 - self.bbox.lat1) * self.image.height() as f32;
+        if x < 0.0 || x >= self.image.width() as f32 || y < 0.0 || y >= self.image.height() as f32 {
+            return None;
+        }
+
+        Some(*self.image.get_pixel(x.round() as u32, y.round() as u32))
+    }
 }
 
 #[cfg(test)]
@@ -96,11 +108,6 @@ mod tests {
     use super::parse_json;
     use super::RadarPrecipitationResponseItem;
     use chrono::offset::TimeZone;
-
-    #[test]
-    fn test_dummy() {
-        assert_eq!(1, 1);
-    }
 
     #[test]
     fn test_parse_json() {
@@ -131,6 +138,32 @@ mod tests {
             chrono::FixedOffset::east(0)
                 .ymd(2019, 11, 21)
                 .and_hms(02, 45, 00)
-        )
+        );
+
+        assert_eq!(
+            first_timestamped_weather_map.weather_map.image.dimensions(),
+            (800, 600)
+        );
+    }
+
+    #[test]
+    fn test_get_pixel_coordinate() {
+        let site = super::super::site::DummySiteDownloader::new();
+        let mut result = super::load_radar(Box::new(site)).unwrap();
+        let first_timestamped_weather_map = result.pop().unwrap();
+        assert_eq!(
+            first_timestamped_weather_map
+                .weather_map
+                .get_pixel_at_coordinate(0.0, 0.0)
+                .is_none(),
+            true
+        );
+
+        assert_eq!(
+            first_timestamped_weather_map
+                .weather_map
+                .get_pixel_at_coordinate(45.0, 15.0),
+            Some(image::Rgba::<u8>([8, 70, 254, 255]))
+        );
     }
 }

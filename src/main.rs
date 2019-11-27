@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 extern crate log;
 mod px_to_precipitation;
 mod meteo_data;
+mod web_server;
 
 //use chrono::prelude::*;
 
@@ -75,10 +76,8 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     error!("Err example");
 
     let _ = std::thread::Builder::new()
-        .name("data_fetch".to_string())
-        .spawn(move || {
-            info!("Hello from data_fetch thread");
-        })?
+        .name("web_server".to_string())
+        .spawn(web_server::main)?
         .join();
     info!("Back in main thread");
 

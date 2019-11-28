@@ -72,7 +72,7 @@ fn load_radar(
             },
         )
         .filter(|item| match item {
-            Ok(v) => true,
+            Ok(_) => true,
             _ => false,
         })
         .map(|item| item.unwrap())

@@ -46,7 +46,7 @@ impl SiteDownloader for DummySiteDownloader {
         Ok(String::from("[{\"mode\":\"ANL\",\"path\":\"0.png\",\"date\":\"201911210245\",\"hhmm\":\"0245\",\"bbox\":\"44.67,12.1,47.42,17.44\",\"width\":\"800\",\"height\":\"600\",\"valid\":\"2019-11-21T02:45:00Z\"}]"))
     }
 
-    fn get_radar_image(&self, rel_path: &str) -> Result<Vec<u8>, Box<dyn Error>> {
+    fn get_radar_image(&self, _: &str) -> Result<Vec<u8>, Box<dyn Error>> {
         let file = File::open("test_fixtures/inca_si0zm_20191115-1830+0000.png")?;
         let mut buf_reader = BufReader::new(file);
         let mut contents = Vec::new();

@@ -13,15 +13,16 @@
   </head>
   <body>
     <div class="grid">
+      {% if is_raining %}
+      <i class="wi wi-rain"></i>
+      {% else %}
       <i class="wi wi-day-sunny"></i>
+      {% endif %}
     </div>
-
     <div class="info">
+      {{description}}<br>
       &copy; 2019 <a href="https://matjazdrolc.eu">matjazdrolc.eu</a>. Vir
       podatkov: <a href="http://meteo.arso.gov.si/">meteo.arso.gov.si</a>
     </div>
-
-    <!--   <i class="wi wi-rain"></i>
- -->
   </body>
 </html>

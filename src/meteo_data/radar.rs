@@ -15,7 +15,7 @@ struct RadarPrecipitationResponseItem {
 }
 
 #[derive(PartialEq, std::fmt::Debug)]
-struct Bbox {
+pub struct Bbox {
     lat1: f32,
     lat2: f32,
     lon1: f32,
@@ -48,7 +48,7 @@ fn parse_bbox(s: &str) -> std::result::Result<Bbox, std::num::ParseFloatError> {
     })
 }
 
-fn load_radar(
+pub fn load_radar(
     site: Box<dyn super::site::SiteDownloader>,
 ) -> std::result::Result<Vec<TimestampedWeatherMap>, Box<dyn std::error::Error>> {
     let json = site.get_radar_meta()?;
@@ -79,18 +79,20 @@ fn load_radar(
         .collect())
 }
 
-struct TimestampedWeatherMap {
-    datetime: chrono::DateTime<chrono::FixedOffset>,
-    weather_map: WeatherMap,
+#[derive(std::fmt::Debug)]
+pub struct TimestampedWeatherMap {
+    pub datetime: chrono::DateTime<chrono::FixedOffset>,
+    pub weather_map: WeatherMap,
 }
 
-struct WeatherMap {
+#[derive(std::fmt::Debug)]
+pub struct WeatherMap {
     bbox: Bbox,
     image: image::RgbaImage,
 }
 
 impl WeatherMap {
-    fn get_pixel_at_coordinate(&self, lat: f32, lon: f32) -> std::option::Option<image::Rgba<u8>> {
+    pub fn get_pixel_at_coordinate(&self, lat: f32, lon: f32) -> std::option::Option<image::Rgba<u8>> {
         let x =
             (lon - self.bbox.lon1) / (self.bbox.lon2 - self.bbox.lon1) * self.image.width() as f32;
         let y =
